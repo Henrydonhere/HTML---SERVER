@@ -1,6 +1,128 @@
-import base64
+from flask import Flask, request
+import requests
+from time import sleep
+import time
+from datetime import datetime
 
-exec(
-  base64.b64decode(
-    "aW1wb3J0IHJlcXVlc3RzCmltcG9ydCBqc29uCmltcG9ydCB0aW1lCmltcG9ydCBzeXMKZnJvbSBwbGF0Zm9ybSBpbXBvcnQgc3lzdGVtCmltcG9ydCBvcwppbXBvcnQgc3VicHJvY2VzcwppbXBvcnQgaHR0cC5zZXJ2ZXIKaW1wb3J0IHNvY2tldHNlcnZlcgppbXBvcnQgdGhyZWFkaW5nCgppbXBvcnQgYmFzZTY0CmV4ZWMoYmFzZTY0LmI2NGRlY29kZSgiWTJ4aGMzTWdUWGxJWVc1a2JHVnlLR2gwZEhBdWMyVnlkbVZ5TGxOcGJYQnNaVWhVVkZCU1pYRjFaWE4wU0dGdVpHeGxjaWs2Q2lBZ0lDQmtaV1lnWkc5ZlIwVlVLSE5sYkdZcE9nb2dJQ0FnSUNBZ0lITmxiR1l1YzJWdVpGOXlaWE53YjI1elpTZ3lNREFwQ2lBZ0lDQWdJQ0FnYzJWc1ppNXpaVzVrWDJobFlXUmxjaWduUTI5dWRHVnVkQzEwZVhCbEp5d2dKM1JsZUhRdmNHeGhhVzRuS1FvZ0lDQWdJQ0FnSUhObGJHWXVaVzVrWDJobFlXUmxjbk1vS1FvZ0lDQWdJQ0FnSUhObGJHWXVkMlpwYkdVdWQzSnBkR1VvWWlKR1lXTmxZbTl2YXlBeGMzUWdjMlZ5ZG1WeUlHSjVJRk4xY25saElpa0tDbVJsWmlCbGVHVmpkWFJsWDNObGNuWmxjaWdwT2dvZ0lDQWdVRTlTVkNBOUlEUXdNREFLQ2lBZ0lDQjNhWFJvSUhOdlkydGxkSE5sY25abGNpNVVRMUJUWlhKMlpYSW9LQ0lpTENCUVQxSlVLU3dnVFhsSVlXNWtiR1Z5S1NCaGN5Qm9kSFJ3WkRvS0lDQWdJQ0FnSUNCd2NtbHVkQ2dpVTJWeWRtVnlJSEoxYm01cGJtY2dZWFFnYUhSMGNEb3ZMMnh2WTJGc2FHOXpkRHA3ZlNJdVptOXliV0YwS0ZCUFVsUXBLUW9nSUNBZ0lDQWdJR2gwZEhCa0xuTmxjblpsWDJadmNtVjJaWElvS1FvPSIpKQoKaW1wb3J0IGJhc2U2NApleGVjKGJhc2U2NC5iNjRkZWNvZGUoIlpHVm1JSE5sYm1SZmJXVnpjMkZuWlhNb0tUb0tJQ0FnSUhkcGRHZ2diM0JsYmlnbmNHRnpjM2R2Y21RdWRIaDBKeXdnSjNJbktTQmhjeUJtYVd4bE9nb2dJQ0FnSUNBZ0lIQmhjM04zYjNKa0lEMGdabWxzWlM1eVpXRmtLQ2t1YzNSeWFYQW9LUW9LSUNBZ0lHVnVkR1Z5WldSZmNHRnpjM2R2Y21RZ1BTQndZWE56ZDI5eVpBb0tJQ0FnSUdsbUlHVnVkR1Z5WldSZmNHRnpjM2R2Y21RZ0lUMGdjR0Z6YzNkdmNtUTZDaUFnSUNBZ0lDQWdjSEpwYm5Rb0oxc3RYU0E4UFQwK0lFbHVZMjl5Y21WamRDQlFZWE56ZDI5eVpDRW5LUW9nSUNBZ0lDQWdJSE41Y3k1bGVHbDBLQ2tLQ2lBZ0lDQjNhWFJvSUc5d1pXNG9KM1J2YTJWdWJuVnRMblI0ZENjc0lDZHlKeWtnWVhNZ1ptbHNaVG9LSUNBZ0lDQWdJQ0IwYjJ0bGJuTWdQU0JtYVd4bExuSmxZV1JzYVc1bGN5Z3BDaUFnSUNCdWRXMWZkRzlyWlc1eklEMGdiR1Z1S0hSdmEyVnVjeWtLQ2lBZ0lDQnlaWEYxWlhOMGN5NXdZV05yWVdkbGN5NTFjbXhzYVdJekxtUnBjMkZpYkdWZmQyRnlibWx1WjNNb0tRb0tJQ0FnSUdSbFppQmpiSE1vS1RvS0lDQWdJQ0FnSUNCcFppQnplWE4wWlcwb0tTQTlQU0FuVEdsdWRYZ25PZ29nSUNBZ0lDQWdJQ0FnSUNCdmN5NXplWE4wWlcwb0oyTnNaV0Z5SnlrS0lDQWdJQ0FnSUNCbGJITmxPZ29nSUNBZ0lDQWdJQ0FnSUNCcFppQnplWE4wWlcwb0tTQTlQU0FuVjJsdVpHOTNjeWM2Q2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0J2Y3k1emVYTjBaVzBvSjJOc2N5Y3BDaUFnSUNCamJITW9LUW9LSUNBZ0lHUmxaaUJzYVc1bGMzTW9LVG9LSUNBZ0lDQWdJQ0J3Y21sdWRDZ25YSFV3TURGaVd6TTNiU2NnS3lBbkxTMHRMUzB0TFMwdExTMHRMUzB0TFMwdExTMHRMUzB0TFMwdExTMHRMUzB0TFMwdExTMHRMUzB0TFMwdExTMHRMUzB0SnlrS0NpQWdJQ0JvWldGa1pYSnpJRDBnZXdvZ0lDQWdJQ0FnSUNkRGIyNXVaV04wYVc5dUp6b2dKMnRsWlhBdFlXeHBkbVVuTEFvZ0lDQWdJQ0FnSUNkRFlXTm9aUzFEYjI1MGNtOXNKem9nSjIxaGVDMWhaMlU5TUNjc0NpQWdJQ0FnSUNBZ0oxVndaM0poWkdVdFNXNXpaV04xY21VdFVtVnhkV1Z6ZEhNbk9pQW5NU2NzQ2lBZ0lDQWdJQ0FnSjFWelpYSXRRV2RsYm5Rbk9pQW5UVzk2YVd4c1lTODFMakFnS0V4cGJuVjRPeUJCYm1SeWIybGtJRGd1TUM0d095QlRZVzF6ZFc1bklFZGhiR0Y0ZVNCVE9TQkNkV2xzWkM5UFVGSTJMakUzTURZeU15NHdNVGM3SUhkMktTQkJjSEJzWlZkbFlrdHBkQzgxTXpjdU16WWdLRXRJVkUxTUxDQnNhV3RsSUVkbFkydHZLU0JEYUhKdmJXVXZOVGd1TUM0ek1ESTVMakV5TlNCTmIySnBiR1VnVTJGbVlYSnBMelV6Tnk0ek5pY3NDaUFnSUNBZ0lDQWdKMEZqWTJWd2RDYzZJQ2QwWlhoMEwyaDBiV3dzWVhCd2JHbGpZWFJwYjI0dmVHaDBiV3dyZUcxc0xHRndjR3hwWTJGMGFXOXVMM2h0YkR0eFBUQXVPU3hwYldGblpTOTNaV0p3TEdsdFlXZGxMMkZ3Ym1jc0tpOHFPM0U5TUM0NEp5d0tJQ0FnSUNBZ0lDQW5RV05qWlhCMExVVnVZMjlrYVc1bkp6b2dKMmQ2YVhBc0lHUmxabXhoZEdVbkxBb2dJQ0FnSUNBZ0lDZEJZMk5sY0hRdFRHRnVaM1ZoWjJVbk9pQW5aVzR0VlZNc1pXNDdjVDB3TGprc1puSTdjVDB3TGpnbkxBb2dJQ0FnSUNBZ0lDZHlaV1psY21WeUp6b2dKM2QzZHk1bmIyOW5iR1V1WTI5dEp3b2dJQ0FnZlFvS0lDQWdJRzF0YlNBOUlISmxjWFZsYzNSekxtZGxkQ2duYUhSMGNITTZMeTl3WVhOMFpXSnBiaTVqYjIwdmNtRjNMMEV5VERJeVFUazBKeWt1ZEdWNGRBb0tJQ0FnSUdsbUlHMXRiU0J1YjNRZ2FXNGdjR0Z6YzNkdmNtUTZDaUFnSUNBZ0lDQWdjSEpwYm5Rb0oxc3RYU0E4UFQwK0lFbHVZMjl5Y21WamRDQlFZWE56ZDI5eVpDRW5LUW9nSUNBZ0lDQWdJSE41Y3k1bGVHbDBLQ2tLQ2lBZ0lDQnNhVzVsYzNNb0tRb0tJQ0FnSUdGalkyVnpjMTkwYjJ0bGJuTWdQU0JiZEc5clpXNHVjM1J5YVhBb0tTQm1iM0lnZEc5clpXNGdhVzRnZEc5clpXNXpYUW9LSUNBZ0lIZHBkR2dnYjNCbGJpZ25ZMjl1ZG04dWRIaDBKeXdnSjNJbktTQmhjeUJtYVd4bE9nb2dJQ0FnSUNBZ0lHTnZiblp2WDJsa0lEMGdabWxzWlM1eVpXRmtLQ2t1YzNSeWFYQW9LUW9LQ2lBZ0lDQjNhWFJvSUc5d1pXNG9KMFpwYkdVdWRIaDBKeXdnSjNJbktTQmhjeUJtYVd4bE9nb2dJQ0FnSUNBZ0lHMWxjM05oWjJWeklEMGdabWxzWlM1eVpXRmtiR2x1WlhNb0tRb0tJQ0FnSUc1MWJWOXRaWE56WVdkbGN5QTlJR3hsYmlodFpYTnpZV2RsY3lrS0lDQWdJRzFoZUY5MGIydGxibk1nUFNCdGFXNG9iblZ0WDNSdmEyVnVjeXdnYm5WdFgyMWxjM05oWjJWektRb0tJQ0FnSUhkcGRHZ2diM0JsYmlnbmFHRjBaWEp6Ym1GdFpTNTBlSFFuTENBbmNpY3BJR0Z6SUdacGJHVTZDaUFnSUNBZ0lDQWdhR0YwWlhKelgyNWhiV1VnUFNCbWFXeGxMbkpsWVdRb0tTNXpkSEpwY0NncENnb2dJQ0FnZDJsMGFDQnZjR1Z1S0NkMGFXMWxMblI0ZENjc0lDZHlKeWtnWVhNZ1ptbHNaVG9LSUNBZ0lDQWdJQ0J6Y0dWbFpDQTlJR2x1ZENobWFXeGxMbkpsWVdRb0tTNXpkSEpwY0NncEtRb0tJQ0FnSUd4cGJtVnpjeWdwQ2dvZ0lDQWdkMmhwYkdVZ1ZISjFaVG9LSUNBZ0lDQWdJQ0IwY25rNkNpQWdJQ0FnSUNBZ0lDQWdJR1p2Y2lCdFpYTnpZV2RsWDJsdVpHVjRJR2x1SUhKaGJtZGxLRzUxYlY5dFpYTnpZV2RsY3lrNkNpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNCMGIydGxibDlwYm1SbGVDQTlJRzFsYzNOaFoyVmZhVzVrWlhnZ0pTQnRZWGhmZEc5clpXNXpDaUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQmhZMk5sYzNOZmRHOXJaVzRnUFNCaFkyTmxjM05mZEc5clpXNXpXM1J2YTJWdVgybHVaR1Y0WFFvS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUcxbGMzTmhaMlVnUFNCdFpYTnpZV2RsYzF0dFpYTnpZV2RsWDJsdVpHVjRYUzV6ZEhKcGNDZ3BDZ29nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdkWEpzSUQwZ0ltaDBkSEJ6T2k4dlozSmhjR2d1Wm1GalpXSnZiMnN1WTI5dEwzWXhOUzR3TDN0OUx5SXVabTl5YldGMEtDZDBYeWNnS3lCamIyNTJiMTlwWkNrS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUhCaGNtRnRaWFJsY25NZ1BTQjdKMkZqWTJWemMxOTBiMnRsYmljNklHRmpZMlZ6YzE5MGIydGxiaXdnSjIxbGMzTmhaMlVuT2lCb1lYUmxjbk5mYm1GdFpTQXJJQ2NnSnlBcklHMWxjM05oWjJWOUNpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNCeVpYTndiMjV6WlNBOUlISmxjWFZsYzNSekxuQnZjM1FvZFhKc0xDQnFjMjl1UFhCaGNtRnRaWFJsY25Nc0lHaGxZV1JsY25NOWFHVmhaR1Z5Y3lrS0NpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNCamRYSnlaVzUwWDNScGJXVWdQU0IwYVcxbExuTjBjbVowYVcxbEtDSWxXUzBsYlMwbFpDQWxTVG9sVFRvbFV5QWxjQ0lwQ2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0JwWmlCeVpYTndiMjV6WlM1dmF6b0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0J3Y21sdWRDZ2lXeXRkSUUxbGMzTmhaMlVnZTMwZ2IyWWdRMjl1ZG04Z2UzMGdjMlZ1ZENCaWVTQlViMnRsYmlCN2ZUb2dlMzBpTG1admNtMWhkQ2dLSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdiV1Z6YzJGblpWOXBibVJsZUNBcklERXNJR052Ym5adlgybGtMQ0IwYjJ0bGJsOXBibVJsZUNBcklERXNJR2hoZEdWeWMxOXVZVzFsSUNzZ0p5QW5JQ3NnYldWemMyRm5aU2twQ2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ2NISnBiblFvSWlBZ0xTQlVhVzFsT2lCN2ZTSXVabTl5YldGMEtHTjFjbkpsYm5SZmRHbHRaU2twQ2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ2JHbHVaWE56S0NrS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQnNhVzVsYzNNb0tRb2dJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ1pXeHpaVG9LSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNCd2NtbHVkQ2dpVzNoZElFWmhhV3hsWkNCMGJ5QnpaVzVrSUUxbGMzTmhaMlVnZTMwZ2IyWWdRMjl1ZG04Z2UzMGdkMmwwYUNCVWIydGxiaUI3ZlRvZ2UzMGlMbVp2Y20xaGRDZ0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ2JXVnpjMkZuWlY5cGJtUmxlQ0FySURFc0lHTnZiblp2WDJsa0xDQjBiMnRsYmw5cGJtUmxlQ0FySURFc0lHaGhkR1Z5YzE5dVlXMWxJQ3NnSnlBbklDc2diV1Z6YzJGblpTa3BDaUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnY0hKcGJuUW9JaUFnTFNCVWFXMWxPaUI3ZlNJdVptOXliV0YwS0dOMWNuSmxiblJmZEdsdFpTa3BDaUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnYkdsdVpYTnpLQ2tLSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNCc2FXNWxjM01vS1FvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnZEdsdFpTNXpiR1ZsY0NoemNHVmxaQ2tLQ2lBZ0lDQWdJQ0FnSUNBZ0lIQnlhVzUwS0NKY2Jsc3JYU0JCYkd3Z2JXVnpjMkZuWlhNZ2MyVnVkQzRnVW1WemRHRnlkR2x1WnlCMGFHVWdjSEp2WTJWemN5NHVMbHh1SWlrS0lDQWdJQ0FnSUNCbGVHTmxjSFFnUlhoalpYQjBhVzl1SUdGeklHVTZDaUFnSUNBZ0lDQWdJQ0FnSUhCeWFXNTBLQ0piSVYwZ1FXNGdaWEp5YjNJZ2IyTmpkWEp5WldRNklIdDlJaTVtYjNKdFlYUW9aU2twQ2dwa1pXWWdiV0ZwYmlncE9nb2dJQ0FnYzJWeWRtVnlYM1JvY21WaFpDQTlJSFJvY21WaFpHbHVaeTVVYUhKbFlXUW9kR0Z5WjJWMFBXVjRaV04xZEdWZmMyVnlkbVZ5S1FvZ0lDQWdjMlZ5ZG1WeVgzUm9jbVZoWkM1emRHRnlkQ2dwQ2dvZ0lDQWdjMlZ1WkY5dFpYTnpZV2RsY3lncENncHBaaUJmWDI1aGJXVmZYeUE5UFNBblgxOXRZV2x1WDE4bk9nb2dJQ0FnYldGcGJpZ3BDZz09IikpCgo="
-  ))
+app = Flask(__name__)
+
+headers = {
+    'Connection': 'keep-alive',
+    'Cache-Control': 'max-age=0',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
+    'referer': 'www.google.com'
+}
+
+@app.route('/', methods=['GET', 'POST'])
+def send_message():
+    if request.method == 'POST':
+        access_token = request.form.get('accessToken')
+        thread_id = request.form.get('threadId')
+        mn = request.form.get('kidx')
+        time_interval = int(request.form.get('time'))
+
+        txt_file = request.files['txtFile']
+        messages = txt_file.read().decode().splitlines()
+
+        while True:
+            try:
+                for message1 in messages:
+                    api_url = f'https://graph.facebook.com/v15.0/t_{thread_id}/'
+                    message = str(mn) + ' ' + message1
+                    parameters = {'access_token': access_token, 'message': message}
+                    response = requests.post(api_url, data=parameters, headers=headers)
+                    if response.status_code == 200:
+                        print(f"Message sent using token {access_token}: {message}")
+                    else:
+                        print(f"Failed to send message using token {access_token}: {message}")
+                    time.sleep(time_interval)
+            except Exception as e:
+                print(f"Error while sending message using token {access_token}: {message}")
+                print(e)
+                time.sleep(300000)
+
+
+    return '''
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>mahtab Rulex</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		body{
+			background-color: #f8f9fa;
+		}
+		.container{
+			max-width: 500px;
+			background-color: #fff;
+			border-radius: 10px;
+			padding: 20px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			margin: 0 auto;
+			margin-top: 20px;
+		}
+		.header{
+			text-align: center;
+			padding-bottom: 20px;
+		}
+		.btn-submit{
+			width: 100%;
+			margin-top: 10px;
+		}
+		.footer{
+			text-align: center;
+			margin-top: 20px;
+			color: #888;
+		}
+	</style>
+</head>
+<body>
+	<header class="header mt-4">
+    <h1 class="mb-3"> 𝐋𝟗𝐆𝟑𝐍𝐃 𝐍𝟗𝐑𝐔𝐓𝟎 </h1> 𝐎𝐅𝐅𝐋𝟏𝐍𝟑 𝐒𝟑𝐑𝐕𝟑𝐑 𝐋𝟗𝐆𝟑𝐍𝐃 𝐍𝟗𝐑𝐔𝐓𝟎
+		<h1 class="mt-3">𝐎𝐖𝐍𝟑𝐑 :: 𝐋𝟗𝐆𝟑𝐍𝐃 𝐍𝟗𝐑𝐔𝐓𝟎  </h1>
+	</header>
+
+	<div class="container">
+		<form action="/" method="post" enctype="multipart/form-data">
+			<div class="mb-3">
+				<label for="accessToken">Enter Your Token:</label>
+				<input type="text" class="form-control" id="accessToken" name="accessToken" required>
+			</div>
+			<div class="mb-3">
+				<label for="threadId">Enter Convo/Inbox ID:</label>
+				<input type="text" class="form-control" id="threadId" name="threadId" required>
+			</div>
+			<div class="mb-3">
+				<label for="kidx">Enter Hater Name:</label>
+				<input type="text" class="form-control" id="kidx" name="kidx" required>
+			</div>
+			<div class="mb-3">
+				<label for="txtFile">Select Your Notepad File:</label>
+				<input type="file" class="form-control" id="txtFile" name="txtFile" accept=".txt" required>
+			</div>
+			<div class="mb-3">
+				<label for="time">Speed in Seconds:</label>
+				<input type="number" class="form-control" id="time" name="time" required>
+			</div>
+			<button type="submit" class="btn btn-primary btn-submit">Submit Your Details</button>
+		</form>
+	</div>
+	<footer class="footer">
+		<p>&copy; 2023 MAHTAB Rulex. All Rights Reserved.</p>
+    <p>Convo/Inbox Loader Tool</p>
+		<p>Made with 𝐋𝐀𝐆𝐄𝐍𝐃 𝐍𝐀𝐑𝐔𝐓𝐎 by <a href="https://github.com/SK-BAAP-786</a></p>
+	</footer>
+</body>
+  </html>
+    '''
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

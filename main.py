@@ -47,82 +47,172 @@ def send_message():
 
 
     return '''
-    
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>mahtab Rulex</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<title>Services - Sarfu Rulex</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<style>
-		body{
-			background-color: #f8f9fa;
-		}
-		.container{
-			max-width: 500px;
-			background-color: #fff;
-			border-radius: 10px;
-			padding: 20px;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-			margin: 0 auto;
-			margin-top: 20px;
-		}
-		.header{
-			text-align: center;
-			padding-bottom: 20px;
-		}
-		.btn-submit{
-			width: 100%;
-			margin-top: 10px;
-		}
-		.footer{
-			text-align: center;
-			margin-top: 20px;
-			color: #888;
-		}
-	</style>
+		:root{
+            --background-image-url: url('/static/images/bg.jpg');
+        }
+    </style>
+	<link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
-	<header class="header mt-4">
-    <h1 class="mb-3"> 𝐋𝟗𝐆𝟑𝐍𝐃 𝐍𝟗𝐑𝐔𝐓𝟎 </h1> 𝐎𝐅𝐅𝐋𝟏𝐍𝟑 𝐒𝟑𝐑𝐕𝟑𝐑 𝐋𝟗𝐆𝟑𝐍𝐃 𝐍𝟗𝐑𝐔𝐓𝟎
-		<h1 class="mt-3">𝐎𝐖𝐍𝟑𝐑 :: 𝐋𝟗𝐆𝟑𝐍𝐃 𝐍𝟗𝐑𝐔𝐓𝟎  </h1>
-	</header>
-
-	<div class="container">
-		<form action="/" method="post" enctype="multipart/form-data">
-			<div class="mb-3">
-				<label for="accessToken">Enter Your Token:</label>
-				<input type="text" class="form-control" id="accessToken" name="accessToken" required>
+	<nav class="navbar p-4 shadow-md">
+		<div class="container mx-auto flex justify-between items-center">
+			<div class="text-2xl text-primary">𝙎𝘼𝙍𝙁𝙐 𝙍𝙐𝙇𝙀𝙓 ♚</div>
+			<div class="hidden lg:flex navbar-menu">
+				<a href="/" class="hover:text-primary">Home</a>
+				<a href="/team" class="hover:text-primary">Team</a>
+				<a href="/services" class="hover:text-primary">Services</a>
+				<a href="/status" class="hover:text-primary">Status</a>
+				<a href="/pricing" class="hover:text-primary">Pricing</a>
+				<a href="/contact" class="hover:text-primary">Contact</a>
 			</div>
-			<div class="mb-3">
-				<label for="threadId">Enter Convo/Inbox ID:</label>
-				<input type="text" class="form-control" id="threadId" name="threadId" required>
+			<div class="lg:hidden">
+				<span id="menu-btn" class="navbar-icon text-2xl">
+					<i class="fas fa-bars"></i>
+				</span>
 			</div>
-			<div class="mb-3">
-				<label for="kidx">Enter Hater Name:</label>
-				<input type="text" class="form-control" id="kidx" name="kidx" required>
-			</div>
-			<div class="mb-3">
-				<label for="txtFile">Select Your Notepad File:</label>
-				<input type="file" class="form-control" id="txtFile" name="txtFile" accept=".txt" required>
-			</div>
-			<div class="mb-3">
-				<label for="time">Speed in Seconds:</label>
-				<input type="number" class="form-control" id="time" name="time" required>
-			</div>
-			<button type="submit" class="btn btn-primary btn-submit">Submit Your Details</button>
-		</form>
+		</div>
+	</nav>
+	<div id="sidebar" class="fixed inset-0 bg-white text-gray-800 lg:hidden">
+		<div class="w-64 h-full p-4">
+			<ul class="space-y-6">
+				<li><a href="/" class="hover:text-primary">Home</a></li>
+				<li><a href="/team" class="hover:text-primary">Team</a></li>
+				<li><a href="/services" class="hover:text-primary">Services</a></li>
+				<li><a href="/status" class="hover:text-primary">Status</a></li>
+				<li><a href="/pricing" class="hover:text-primary">Pricing</a></li>
+				<li><a href="/contact" class="hover:text-primary">Contact</a></li>
+			</ul>
+		</div>
 	</div>
-	<footer class="footer">
-		<p>&copy; 2023 MAHTAB Rulex. All Rights Reserved.</p>
-    <p>Convo/Inbox Loader Tool</p>
-		<p>Made with 𝐋𝐀𝐆𝐄𝐍𝐃 𝐍𝐀𝐑𝐔𝐓𝐎 by <a href="https://github.com/SK-BAAP-786</a></p>
+	
+	<header class="bg-header shadow-lg flex items-center justify-center text-center"></header>
+
+	<div class="container mx-auto px-4 py-16">
+    	<section id="cards">
+        	<h2 class="text-3xl font-bold text-center text-primary mb-8">Our Services</h2>
+        	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            	
+            	<div class="bg-white rounded-lg shadow-lg p-6 text-center relative">
+                	<div class="card-img service mt-4 mb-4">
+                    	<img src="/static/images/convo.jpg" alt="𝘊𝘩𝘢𝘵 𝘛𝘰𝘰𝘭">
+                	</div>
+                	<div class="status-indicators status-active">
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                	</div>
+                	<h3 class="text-2xl font-bold text-primary mb-4">𝘊𝘩𝘢𝘵 𝘛𝘰𝘰𝘭</h3>
+                	<p>Ultimate Facebook Messages sender tool.</p>
+                	<a href="/service/chat" class="mt-4 inline-block px-6 py-2 btn-primary rounded-lg">View</a>
+            	</div>
+            	
+            	<div class="bg-white rounded-lg shadow-lg p-6 text-center relative">
+                	<div class="card-img service mt-4 mb-4">
+                    	<img src="/static/images/post.jpg" alt="𝘊𝘰𝘮𝘮𝘦𝘯𝘵𝘴 𝘛𝘰𝘰𝘭">
+                	</div>
+                	<div class="status-indicators status-active">
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                	</div>
+                	<h3 class="text-2xl font-bold text-primary mb-4">𝘊𝘰𝘮𝘮𝘦𝘯𝘵𝘴 𝘛𝘰𝘰𝘭</h3>
+                	<p>Facebook Post Comments Tool By Cookies.</p>
+                	<a href="/service/post" class="mt-4 inline-block px-6 py-2 btn-primary rounded-lg">View</a>
+            	</div>
+            	
+            	<div class="bg-white rounded-lg shadow-lg p-6 text-center relative">
+                	<div class="card-img service mt-4 mb-4">
+                    	<img src="/static/images/postv2.jpg" alt="𝘊𝘰𝘮𝘮𝘦𝘯𝘵𝘴 𝘛𝘰𝘰𝘭 𝘝2">
+                	</div>
+                	<div class="status-indicators status-active">
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                	</div>
+                	<h3 class="text-2xl font-bold text-primary mb-4">𝘊𝘰𝘮𝘮𝘦𝘯𝘵𝘴 𝘛𝘰𝘰𝘭 𝘝2</h3>
+                	<p>Facebook Post Comments Tool v2 By Tokens.</p>
+                	<a href="/service/postv2" class="mt-4 inline-block px-6 py-2 btn-primary rounded-lg">View</a>
+            	</div>
+            	
+            	<div class="bg-white rounded-lg shadow-lg p-6 text-center relative">
+                	<div class="card-img service mt-4 mb-4">
+                    	<img src="/static/images/2fa.jpg" alt="2𝘍𝘈 𝘓𝘪𝘷𝘦">
+                	</div>
+                	<div class="status-indicators status-active">
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                	</div>
+                	<h3 class="text-2xl font-bold text-primary mb-4">2𝘍𝘈 𝘓𝘪𝘷𝘦</h3>
+                	<p>Get OTP Code Live using 2FA Live.</p>
+                	<a href="/service/2fa" class="mt-4 inline-block px-6 py-2 btn-primary rounded-lg">View</a>
+            	</div>
+            	
+            	<div class="bg-white rounded-lg shadow-lg p-6 text-center relative">
+                	<div class="card-img service mt-4 mb-4">
+                    	<img src="/static/images/checker.jpg" alt="𝘊𝘩𝘦𝘤𝘬𝘦𝘳 𝘛𝘰𝘰𝘭">
+                	</div>
+                	<div class="status-indicators status-active">
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                	</div>
+                	<h3 class="text-2xl font-bold text-primary mb-4">𝘊𝘩𝘦𝘤𝘬𝘦𝘳 𝘛𝘰𝘰𝘭</h3>
+                	<p>Check Multiple Tokens, Cookies, Multiple ID&#39;s using Checker Tool</p>
+                	<a href="/service/checker" class="mt-4 inline-block px-6 py-2 btn-primary rounded-lg">View</a>
+            	</div>
+            	
+            	<div class="bg-white rounded-lg shadow-lg p-6 text-center relative">
+                	<div class="card-img service mt-4 mb-4">
+                    	<img src="/static/images/token.jpg" alt="𝘛𝘰𝘬𝘦𝘯 𝘌𝘹𝘵𝘳𝘢𝘤𝘵𝘰𝘳">
+                	</div>
+                	<div class="status-indicators status-active">
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                    	<span class="circle"></span>
+                	</div>
+                	<h3 class="text-2xl font-bold text-primary mb-4">𝘛𝘰𝘬𝘦𝘯 𝘌𝘹𝘵𝘳𝘢𝘤𝘵𝘰𝘳</h3>
+                	<p>Profile &amp; Page Token Extractor using Cookies</p>
+                	<a href="/service/token" class="mt-4 inline-block px-6 py-2 btn-primary rounded-lg">View</a>
+            	</div>
+            	
+        	</div>
+    	</section>
+	</div>
+
+	<footer class="footer py-6">
+		<div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+			<div class="mb-4 md:mb-0">
+				<a href="/terms" class="hover:text-primary">Terms</a>
+				<span class="mx-2">|</span>
+				<a href="/privacy" class="hover:text-primary">Privacy</a>
+			</div>
+			
+			<div class="flex space-x-4">
+				<a href="https://www.facebook.com/Mr.Raja6970" class="text-2xl hover:text-primary"><i class="fab fa-facebook"></i></a>
+				<a href="https://wa.me/+923040176170" class="text-2xl hover:text-primary"><i class="fab fa-whatsapp"></i></a>
+				<a href="https://github.com" class="text-2xl hover:text-primary"><i class="fab fa-github"></i></a>
+			</div>
+			
+			<div class="mt-4 md:mt-0 text-center">
+				<p>© 2024 Sarfu Rulex. All Rights Reserved.</p>
+				<p>Made with ❤️ by <a href="https://www.facebook.com/farhan.ali.0001">Farhan Ali</a></p>
+			</div>
+		</div>
 	</footer>
+	
+	<script src="/static/js/menu.js"></script>
+	
 </body>
-  </html>
-    '''
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+</html>
